@@ -20,10 +20,9 @@ import { QQService } from '~/shared/helper/qq.service'
 import { md5, randomValue } from '~/utils'
 
 import { AccessTokenEntity } from '../auth/entities/access-token.entity'
-import { DeptEntity } from '../system/dept/dept.entity'
+
 import { ParamConfigService } from '../system/param-config/param-config.service'
 import { RoleEntity } from '../system/role/role.entity'
-
 import { UserStatus } from './constant'
 import { PasswordUpdateDto } from './dto/password.dto'
 import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
@@ -68,7 +67,7 @@ export class UserService {
    * 获取用户信息
    * @param uid user id
    */
-  async getAccountInfo(uid: number): Promise<AccountInfo> {
+  async getAccountInfo(uid: bigint): Promise<AccountInfo> {
     const user: UserEntity = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'role')
@@ -86,7 +85,7 @@ export class UserService {
   /**
    * 更新个人信息
    */
-  async updateAccountInfo(uid: number, info: AccountUpdateDto): Promise<void> {
+  async updateAccountInfo(uid: any, info: AccountUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
     if (isEmpty(user))
       throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
@@ -112,7 +111,7 @@ export class UserService {
   /**
    * 更改密码
    */
-  async updatePassword(uid: number, dto: PasswordUpdateDto): Promise<void> {
+  async updatePassword(uid: bigint, dto: PasswordUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
     if (isEmpty(user))
       throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
@@ -130,7 +129,7 @@ export class UserService {
   /**
    * 直接更改密码
    */
-  async forceUpdatePassword(uid: number, password: string): Promise<void> {
+  async forceUpdatePassword(uid: bigint, password: string): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
 
     const newPassword = md5(`${password}${user.psalt}`)
@@ -148,6 +147,7 @@ export class UserService {
     deptId,
     ...data
   }: UserDto): Promise<void> {
+    console.log('🚀 ~ UserService ~ roleIds:', roleIds)
     const exists = await this.userRepository.findOneBy({
       username,
     })
@@ -166,15 +166,17 @@ export class UserService {
       else {
         password = md5(`${password ?? '123456'}${salt}`)
       }
+
+      const roels = await this.roleRepository.findBy({ id: In(roleIds) })
       const u = manager.create(UserEntity, {
         username,
         password,
         ...data,
         psalt: salt,
-        roles: await this.roleRepository.findBy({ id: In(roleIds) }),
-        dept: await DeptEntity.findOneBy({ id: deptId }),
+        roles: roels,
       })
 
+      console.log('🚀 ~ UserService ~ awaitthis.entityManager.transaction ~ u:', u)
       const result = await manager.save(u)
       return result
     })
@@ -184,7 +186,7 @@ export class UserService {
    * 更新用户信息
    */
   async update(
-    id: number,
+    id: bigint,
     { password, deptId, roleIds, status, ...data }: UserUpdateDto,
   ): Promise<void> {
     await this.entityManager.transaction(async (manager) => {
@@ -228,7 +230,7 @@ export class UserService {
    * 查找用户信息
    * @param id 用户id
    */
-  async info(id: number): Promise<UserEntity> {
+  async info(id: bigint): Promise<UserEntity> {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'roles')
@@ -245,7 +247,7 @@ export class UserService {
   /**
    * 根据ID列表删除用户
    */
-  async delete(userIds: number[]): Promise<void | never> {
+  async delete(userIds: any[]): Promise<void | never> {
     const rootUserId = await this.findRootUserId()
     if (userIds.includes(rootUserId))
       throw new BadRequestException('不能删除root用户!')
@@ -256,7 +258,7 @@ export class UserService {
   /**
    * 查找超管的用户ID
    */
-  async findRootUserId(): Promise<number> {
+  async findRootUserId(): Promise<bigint> {
     const user = await this.userRepository.findOneBy({
       roles: { id: ROOT_ROLE_ID },
     })
@@ -299,7 +301,7 @@ export class UserService {
   /**
    * 禁用用户
    */
-  async forbidden(uid: number, accessToken?: string): Promise<void> {
+  async forbidden(uid: bigint, accessToken?: string): Promise<void> {
     await this.redis.del(genAuthPVKey(uid))
     await this.redis.del(genAuthTokenKey(uid))
     await this.redis.del(genAuthPermKey(uid))
@@ -333,7 +335,7 @@ export class UserService {
   /**
    * 升级用户版本密码
    */
-  async upgradePasswordV(id: number): Promise<void> {
+  async upgradePasswordV(id: bigint): Promise<void> {
     // admin:passwordVersion:${param.id}
     const v = await this.redis.get(genAuthPVKey(id))
     if (!isEmpty(v))
@@ -373,6 +375,7 @@ export class UserService {
         psalt: salt,
       })
 
+      console.log('🚀 ~ UserService ~ awaitthis.entityManager.transaction ~ u:', u)
       const user = await manager.save(u)
 
       return user

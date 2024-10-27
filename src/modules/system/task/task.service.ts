@@ -113,7 +113,7 @@ export class TaskService implements OnModuleInit {
   /**
    * task info
    */
-  async info(id: number): Promise<TaskEntity> {
+  async info(id: bigint): Promise<TaskEntity> {
     const task = this.taskRepository
       .createQueryBuilder('task')
       .where({ id })
@@ -133,7 +133,7 @@ export class TaskService implements OnModuleInit {
       throw new BadRequestException('Task is Empty')
 
     await this.stop(task)
-    await this.taskRepository.delete(task.id)
+    await this.taskRepository.delete(task.id as any)
   }
 
   /**
@@ -142,8 +142,8 @@ export class TaskService implements OnModuleInit {
   async once(task: TaskEntity): Promise<void | never> {
     if (task) {
       await this.taskQueue.add(
-        { id: task.id, service: task.service, args: task.data },
-        { jobId: task.id, removeOnComplete: true, removeOnFail: true },
+        { id: task.id.toString(), service: task.service, args: task.data },
+        { jobId: task.id.toString(), removeOnComplete: true, removeOnFail: true },
       )
     }
     else {
@@ -160,7 +160,7 @@ export class TaskService implements OnModuleInit {
       await this.start(task)
   }
 
-  async update(id: number, dto: TaskUpdateDto): Promise<void> {
+  async update(id: any, dto: TaskUpdateDto): Promise<void> {
     await this.taskRepository.update(id, dto)
     const task = await this.info(id)
     if (task.status === 0)
@@ -201,11 +201,11 @@ export class TaskService implements OnModuleInit {
       repeat.limit = task.limit
 
     const job = await this.taskQueue.add(
-      { id: task.id, service: task.service, args: task.data },
-      { jobId: task.id, removeOnComplete: true, removeOnFail: true, repeat },
+      { id: task.id.toString(), service: task.service, args: task.data },
+      { jobId: task.id.toString(), removeOnComplete: true, removeOnFail: true, repeat },
     )
     if (job && job.opts) {
-      await this.taskRepository.update(task.id, {
+      await this.taskRepository.update(task.id as any, {
         jobOpts: JSON.stringify(job.opts.repeat),
         status: 1,
       })
@@ -213,7 +213,7 @@ export class TaskService implements OnModuleInit {
     else {
       // update status to 0，标识暂停任务，因为启动失败
       await job?.remove()
-      await this.taskRepository.update(task.id, {
+      await this.taskRepository.update(task.id as any, {
         status: TaskStatus.Disabled,
       })
       throw new BadRequestException('Task Start failed')
@@ -229,7 +229,7 @@ export class TaskService implements OnModuleInit {
 
     const exist = await this.existJob(task.id.toString())
     if (!exist) {
-      await this.taskRepository.update(task.id, {
+      await this.taskRepository.update(task.id as any, {
         status: TaskStatus.Disabled,
       })
       return
@@ -251,7 +251,7 @@ export class TaskService implements OnModuleInit {
     // 在队列中删除当前任务
     await this.taskQueue.removeRepeatable(JSON.parse(task.jobOpts))
 
-    await this.taskRepository.update(task.id, { status: TaskStatus.Disabled })
+    await this.taskRepository.update(task.id as any, { status: TaskStatus.Disabled })
     // if (task.jobOpts) {
     //   await this.app.queue.sys.removeRepeatable(JSON.parse(task.jobOpts));
     //   // update status
@@ -274,7 +274,7 @@ export class TaskService implements OnModuleInit {
   /**
    * 更新是否已经完成，完成则移除该任务并修改状态
    */
-  async updateTaskCompleteStatus(tid: number): Promise<void> {
+  async updateTaskCompleteStatus(tid: bigint): Promise<void> {
     const jobs = await this.taskQueue.getRepeatableJobs()
     const task = await this.taskRepository.findOneBy({ id: tid })
     // 如果下次执行时间小于当前时间，则表示已经执行完成。

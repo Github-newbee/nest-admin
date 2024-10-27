@@ -57,7 +57,7 @@ export class TokenService {
     return jwtSign
   }
 
-  async generateAccessToken(uid: number, roles: string[] = []) {
+  async generateAccessToken(uid: bigint, roles: string[] = []) {
     const payload: IAuthUser = {
       uid,
       pv: 1,

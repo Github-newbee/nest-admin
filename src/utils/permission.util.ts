@@ -7,7 +7,7 @@ import { isExternal } from '~/utils/is.util'
 import { uniqueSlash } from './tool.util'
 
 export interface RouteRecordRaw {
-  id: number
+  id: bigint
   path: string
   name: string
   component?: string

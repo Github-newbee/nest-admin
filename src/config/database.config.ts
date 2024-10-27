@@ -4,7 +4,8 @@ import dotenv from 'dotenv'
 
 import { DataSource, DataSourceOptions } from 'typeorm'
 
-import { env, envBoolean, envNumber } from '~/global/env'
+import { EverythingSubscriber } from '~/common/subscribe/typeorm-event-subscriber'
+import { env, envBoolean, envNumber } from '../global/env'
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
@@ -23,7 +24,8 @@ const dataSourceOptions: DataSourceOptions = {
   multipleStatements: currentScript === 'typeorm',
   entities: ['dist/modules/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
-  subscribers: ['dist/modules/**/*.subscriber{.ts,.js}'],
+  subscribers: [EverythingSubscriber, 'dist/modules/**/*.subscriber{.ts,.js}'],
+  // subscribers: ['dist/modules/**/*.subscriber{.ts,.js}'],
 }
 export const dbRegToken = 'database'
 

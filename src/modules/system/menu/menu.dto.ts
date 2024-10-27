@@ -36,7 +36,7 @@ export class MenuDto extends OperatorDto {
 
   @ApiProperty({ description: '父级菜单' })
   @IsOptional()
-  parentId: number
+  parentId: bigint
 
   @ApiProperty({ description: '菜单或权限名称' })
   @IsString()

@@ -1,10 +1,8 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
-import { Exclude } from 'class-transformer'
+import { ApiProperty } from '@nestjs/swagger'
 import {
   BaseEntity,
-  Column,
   CreateDateColumn,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   VirtualColumn,
 } from 'typeorm'
@@ -20,8 +18,8 @@ import {
 // }
 
 export abstract class CommonEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryColumn('bigint')
+  id: bigint
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date
@@ -31,15 +29,15 @@ export abstract class CommonEntity extends BaseEntity {
 }
 
 export abstract class CompleteEntity extends CommonEntity {
-  @ApiHideProperty()
-  @Exclude()
-  @Column({ name: 'create_by', update: false, comment: '创建者', nullable: true })
-  createBy: number
+  // @ApiHideProperty()
+  // @Exclude()
+  // @Column({ name: 'create_by', update: false, comment: '创建者', nullable: true })
+  // createBy: bigint
 
-  @ApiHideProperty()
-  @Exclude()
-  @Column({ name: 'update_by', comment: '更新者', nullable: true })
-  updateBy: number
+  // @ApiHideProperty()
+  // @Exclude()
+  // @Column({ name: 'update_by', comment: '更新者', nullable: true })
+  // updateBy: bigint
 
   /**
    * 不会保存到数据库中的虚拟列，数据量大时可能会有性能问题，有性能要求请考虑在 service 层手动实现

@@ -61,7 +61,7 @@ export class RoleService {
   /**
    * 根据角色获取角色信息
    */
-  async info(id: number) {
+  async info(id: bigint) {
     const info = await this.roleRepository
       .createQueryBuilder('role')
       .where({
@@ -77,7 +77,7 @@ export class RoleService {
     return { ...info, menuIds: menus.map(m => m.id) }
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: any): Promise<void> {
     if (id === ROOT_ROLE_ID)
       throw new Error('不能删除超级管理员')
     await this.roleRepository.delete(id)
@@ -86,7 +86,7 @@ export class RoleService {
   /**
    * 增加角色
    */
-  async create({ menuIds, ...data }: RoleDto): Promise<{ roleId: number }> {
+  async create({ menuIds, ...data }: RoleDto): Promise<{ roleId: bigint }> {
     const role = await this.roleRepository.save({
       ...data,
       menus: menuIds
@@ -115,7 +115,7 @@ export class RoleService {
   /**
    * 根据用户id查找角色信息
    */
-  async getRoleIdsByUser(id: number): Promise<number[]> {
+  async getRoleIdsByUser(id: bigint): Promise<bigint[]> {
     const roles = await this.roleRepository.find({
       where: {
         users: { id },
@@ -128,7 +128,7 @@ export class RoleService {
     return []
   }
 
-  async getRoleValues(ids: number[]): Promise<string[]> {
+  async getRoleValues(ids: bigint[]): Promise<string[]> {
     return (
       await this.roleRepository.findBy({
         id: In(ids),
@@ -136,7 +136,7 @@ export class RoleService {
     ).map(r => r.value)
   }
 
-  async isAdminRoleByUser(uid: number): Promise<boolean> {
+  async isAdminRoleByUser(uid: bigint): Promise<boolean> {
     const roles = await this.roleRepository.find({
       where: {
         users: { id: uid },
@@ -151,14 +151,14 @@ export class RoleService {
     return false
   }
 
-  hasAdminRole(rids: number[]): boolean {
+  hasAdminRole(rids: bigint[]): boolean {
     return rids.includes(ROOT_ROLE_ID)
   }
 
   /**
    * 根据角色ID查找是否有关联用户
    */
-  async checkUserByRoleId(id: number): Promise<boolean> {
+  async checkUserByRoleId(id: bigint): Promise<boolean> {
     return this.roleRepository.exist({
       where: {
         users: {

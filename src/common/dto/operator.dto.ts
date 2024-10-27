@@ -4,9 +4,9 @@ import { Exclude } from 'class-transformer'
 export class OperatorDto {
   @ApiHideProperty()
   @Exclude()
-  createBy: number
+  createBy: bigint
 
   @ApiHideProperty()
   @Exclude()
-  updateBy: number
+  updateBy: bigint
 }

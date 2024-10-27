@@ -8,7 +8,7 @@ import { DictItemEntity } from './dict-item.entity'
 export class DictItemDto extends PartialType(DictItemEntity) {
   @ApiProperty({ description: '字典类型 ID' })
   @IsInt()
-  typeId: number
+  typeId: bigint
 
   @ApiProperty({ description: '字典项键名' })
   @IsString()

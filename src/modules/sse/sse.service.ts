@@ -60,7 +60,7 @@ export class SseService {
    * @param uid
    * @constructor
    */
-  async noticeClientToUpdateMenusByUserIds(uid: number | number[]) {
+  async noticeClientToUpdateMenusByUserIds(uid: number | number[] | bigint | bigint[]) {
     const userIds = [].concat(uid) as number[]
     userIds.forEach((uid) => {
       this.sendToClients(uid, { type: 'updatePermsAndMenus' })
@@ -70,7 +70,7 @@ export class SseService {
   /**
    * 通过menuIds通知用户更新权限菜单
    */
-  async noticeClientToUpdateMenusByMenuIds(menuIds: number[]): Promise<void> {
+  async noticeClientToUpdateMenusByMenuIds(menuIds: bigint[]): Promise<void> {
     const roleMenus = await RoleEntity.find({
       where: {
         menus: {
@@ -85,7 +85,7 @@ export class SseService {
   /**
    * 通过roleIds通知用户更新权限菜单
    */
-  async noticeClientToUpdateMenusByRoleIds(roleIds: number[]): Promise<void> {
+  async noticeClientToUpdateMenusByRoleIds(roleIds: bigint[]): Promise<void> {
     const users = await UserEntity.find({
       where: {
         roles: {

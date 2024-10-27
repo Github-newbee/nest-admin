@@ -1,20 +1,20 @@
 import { RedisKeys } from '~/constants/cache.constant'
 
 /** 生成验证码 redis key */
-export function genCaptchaImgKey(val: string | number) {
+export function genCaptchaImgKey(val: string | number | bigint) {
   return `${RedisKeys.CAPTCHA_IMG_PREFIX}${String(val)}` as const
 }
 
 /** 生成 auth token redis key */
-export function genAuthTokenKey(val: string | number) {
+export function genAuthTokenKey(val: string | number | bigint) {
   return `${RedisKeys.AUTH_TOKEN_PREFIX}${String(val)}` as const
 }
 /** 生成 auth permission redis key */
-export function genAuthPermKey(val: string | number) {
+export function genAuthPermKey(val: string | number | bigint) {
   return `${RedisKeys.AUTH_PERM_PREFIX}${String(val)}` as const
 }
 /** 生成 auth passwordVersion redis key */
-export function genAuthPVKey(val: string | number) {
+export function genAuthPVKey(val: string | number | bigint) {
   return `${RedisKeys.AUTH_PASSWORD_V_PREFIX}${String(val)}` as const
 }
 /** 生成 online user redis key */

@@ -16,11 +16,11 @@ export class TaskLogService {
   ) {}
 
   async create(
-    tid: number,
+    tid: bigint,
     status: number,
     time?: number,
     err?: string,
-  ): Promise<number> {
+  ): Promise<bigint> {
     const result = await this.taskLogRepository.save({
       status,
       detail: err,

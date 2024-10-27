@@ -38,17 +38,16 @@ export class UserDto {
   })
   password: string
 
-  @ApiProperty({ description: '归属角色', type: [Number] })
+  @ApiProperty({ description: '归属角色', type: [String] })
   @ArrayNotEmpty()
   @ArrayMinSize(1)
   @ArrayMaxSize(3)
-  roleIds: number[]
+  roleIds: string[]
 
-  @ApiProperty({ description: '归属大区', type: Number })
-  @Type(() => Number)
-  @IsInt()
+  @ApiProperty({ description: '归属大区', type: String })
+  @Type(() => String)
   @IsOptional()
-  deptId?: number
+  deptId?: string
 
   @ApiProperty({ description: '呢称', example: 'admin' })
   @IsOptional()
@@ -89,7 +88,7 @@ export class UserQueryDto extends IntersectionType(PagerDto<UserDto>, PartialTyp
   @ApiProperty({ description: '归属大区', example: 1, required: false })
   @IsInt()
   @IsOptional()
-  deptId?: number
+  deptId?: string
 
   @ApiProperty({ description: '状态', example: 0, required: false })
   @IsInt()
