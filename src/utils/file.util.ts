@@ -6,11 +6,16 @@ import { MultipartFile } from '@fastify/multipart'
 import dayjs from 'dayjs'
 
 enum Type {
-  IMAGE = '图片',
-  TXT = '文档',
-  MUSIC = '音乐',
-  VIDEO = '视频',
-  OTHER = '其他',
+  // 图片
+  IMAGE = 'image',
+  // 文档
+  TXT = 'txt',
+  // 音乐
+  MUSIC = 'music',
+  // 视频
+  VIDEO = 'video',
+  // 其他
+  OTHER = 'other',
 }
 
 export function getFileType(extName: string) {

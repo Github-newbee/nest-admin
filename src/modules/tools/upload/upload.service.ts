@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import dayjs from 'dayjs'
 import { isNil } from 'lodash'
 import { Repository } from 'typeorm'
+import { env } from '~/global/env'
 
 import { Storage } from '~/modules/tools/storage/storage.entity'
 
@@ -26,7 +27,7 @@ export class UploadService {
   /**
    * 保存文件上传记录
    */
-  async saveFile(file: MultipartFile, userId: number): Promise<string> {
+  async saveFile(file: MultipartFile, userId: any): Promise<string> {
     if (isNil(file))
       throw new NotFoundException('Have not any file to upload!')
 
@@ -50,6 +51,7 @@ export class UploadService {
       userId,
     })
 
-    return path
+    const filePath = `${env('APP_BASE_URL')}${path}`
+    return filePath
   }
 }

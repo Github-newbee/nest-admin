@@ -21,7 +21,7 @@ export class StorageService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(dto: StorageCreateDto, userId: number): Promise<void> {
+  async create(dto: StorageCreateDto, userId: any): Promise<void> {
     await this.storageRepository.save({
       ...dto,
       userId,

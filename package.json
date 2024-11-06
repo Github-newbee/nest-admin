@@ -50,6 +50,8 @@
     "@fastify/multipart": "^8.3.0",
     "@fastify/static": "^7.0.4",
     "@liaoliaots/nestjs-redis": "^10.0.0",
+    "@midwayjs/core": "^3.18.0",
+    "@midwayjs/typeorm": "^3.18.2",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/axios": "^3.0.3",
     "@nestjs/bull": "^10.2.1",
