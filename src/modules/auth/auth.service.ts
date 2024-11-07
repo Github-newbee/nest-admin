@@ -1,34 +1,39 @@
+import { HttpService } from '@nestjs/axios'
 import { Inject, Injectable } from '@nestjs/common'
+
+import { JwtService } from '@nestjs/jwt'
 import Redis from 'ioredis'
 
 import { isEmpty } from 'lodash'
-import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
+import { lastValueFrom, map } from 'rxjs'
+import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 
 import { AppConfig, IAppConfig, ISecurityConfig, SecurityConfig } from '~/config'
+
 import { ErrorEnum } from '~/constants/error-code.constant'
+
 import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genTokenBlacklistKey } from '~/helper/genRedisKey'
-
 import { UserService } from '~/modules/user/user.service'
-
 import { md5 } from '~/utils'
 
 import { LoginLogService } from '../system/log/services/login-log.service'
 import { MenuService } from '../system/menu/menu.service'
 import { RoleService } from '../system/role/role.service'
-
 import { TokenService } from './services/token.service'
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRedis() private readonly redis: Redis,
+    private readonly httpService: HttpService,
     private menuService: MenuService,
     private roleService: RoleService,
     private userService: UserService,
     private loginLogService: LoginLogService,
     private tokenService: TokenService,
+    private jwtService: JwtService,
     @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
     @Inject(AppConfig.KEY) private appConfig: IAppConfig,
   ) {}
@@ -155,5 +160,23 @@ export class AuthService {
 
   async getTokenByUid(uid: bigint): Promise<string> {
     return this.redis.get(genAuthTokenKey(uid))
+  }
+
+  async wxLogin(dto) {
+    const { app_id, code } = dto
+    const APP_SECRET = 'c47e9746d0d1e70a3b9e105c8f9fd0e3'
+    const url = `https://api.weixin.qq.com/sns/jscode2session?appid=${app_id}&secret=${APP_SECRET}&js_code=${code}&grant_type=authorization_code`
+    try {
+      const response = await lastValueFrom(
+        this.httpService.get(url).pipe(map(response => response.data)),
+      )
+      const { openid, session_key } = response
+      console.log('🚀 ~ AuthService ~ wxLogin ~ response:', response)
+      return { token: this.jwtService.sign({ openid, session_key }) }
+    }
+    catch (error) {
+      console.error('Failed to fetch access token:', error)
+      throw new Error('无法获取微信Access Token')
+    }
   }
 }

@@ -9,6 +9,7 @@ import { UserService } from '../user/user.service'
 import { AuthService } from './auth.service'
 import { Public } from './decorators/public.decorator'
 import { LoginDto, RegisterDto } from './dto/auth.dto'
+import { WxLoingDto } from './dto/wx-login.dto'
 import { LocalGuard } from './guards/local.guard'
 import { LoginToken } from './models/auth.model'
 import { CaptchaService } from './services/captcha.service'
@@ -42,5 +43,15 @@ export class AuthController {
   @ApiOperation({ summary: '注册' })
   async register(@Body() dto: RegisterDto): Promise<void> {
     await this.userService.register(dto)
+  }
+
+  @Post('wx-login')
+  @ApiOperation({ summary: '微信登录' })
+  @ApiResult({ type: LoginToken })
+  async wxLogin(@Body() dto: WxLoingDto): Promise<LoginToken> {
+    const token = await this.authService.wxLogin(
+      dto,
+    )
+    return token
   }
 }
