@@ -1,5 +1,6 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, OneToMany, Relation } from 'typeorm'
 import { CommonEntity } from '~/common/entity/common.entity'
+import { OrderEntity } from '~/modules/order/entities/order.entity'
 
 @Entity({ name: 'client_user' })
 export class ClientUserEntity extends CommonEntity {
@@ -12,8 +13,11 @@ export class ClientUserEntity extends CommonEntity {
   @Column({ nullable: true })
   remark: string
 
-  @Column({ type: 'tinyint', nullable: true, default: 1 })
+  @Column({ type: 'tinyint', default: 1 })
   status: number
 
   sessionKey: string
+
+  @OneToMany(() => OrderEntity, order => order.clinetUser)
+  orders: Relation<OrderEntity[]>
 }

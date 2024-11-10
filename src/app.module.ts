@@ -22,11 +22,12 @@ import { ClientModule } from './modules/client/client.module'
 import { HealthModule } from './modules/health/health.module'
 import { MeituModule } from './modules/meitu/meitu.module'
 import { NetdiskModule } from './modules/netdisk/netdisk.module'
+import { OrderModule } from './modules/order/order.module'
 import { SseModule } from './modules/sse/sse.module'
 import { SystemModule } from './modules/system/system.module'
 import { TasksModule } from './modules/tasks/tasks.module'
-import { TodoModule } from './modules/todo/todo.module'
 
+import { TodoModule } from './modules/todo/todo.module'
 import { ToolsModule } from './modules/tools/tools.module'
 import { DatabaseModule } from './shared/database/database.module'
 import { SocketModule } from './socket/socket.module'
@@ -73,6 +74,7 @@ import { SocketModule } from './socket/socket.module'
     TodoModule,
     MeituModule,
     ClientModule,
+    OrderModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

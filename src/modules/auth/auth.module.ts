@@ -1,18 +1,15 @@
 import { Module } from '@nestjs/common'
-
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
-
 import { ConfigKeyPaths, ISecurityConfig } from '~/config'
 import { isDev } from '~/global/env'
-
+import { ClinetUserModule } from '../client/user/user.module'
 import { LogModule } from '../system/log/log.module'
 import { MenuModule } from '../system/menu/menu.module'
 import { RoleModule } from '../system/role/role.module'
 import { UserModule } from '../user/user.module'
-
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { AccountController } from './controllers/account.controller'
@@ -55,6 +52,7 @@ const strategies = [LocalStrategy, JwtStrategy]
       inject: [ConfigService],
     }),
     UserModule,
+    ClinetUserModule,
     RoleModule,
     MenuModule,
     LogModule,

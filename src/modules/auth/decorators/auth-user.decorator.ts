@@ -9,6 +9,7 @@ type Payload = keyof IAuthUser
 export const AuthUser = createParamDecorator(
   (data: Payload, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<FastifyRequest>()
+    console.log('🚀 ~ request:', request)
     // auth guard will mount this
     const user = request.user as IAuthUser
 

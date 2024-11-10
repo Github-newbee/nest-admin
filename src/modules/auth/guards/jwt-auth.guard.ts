@@ -5,23 +5,19 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+import { JwtService } from '@nestjs/jwt'
 import { AuthGuard } from '@nestjs/passport'
 import { FastifyRequest } from 'fastify'
 import Redis from 'ioredis'
 import { isEmpty, isNil } from 'lodash'
 import { ExtractJwt } from 'passport-jwt'
-
 import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
-
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { AppConfig, IAppConfig, RouterWhiteList } from '~/config'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { genTokenBlacklistKey } from '~/helper/genRedisKey'
-
 import { AuthService } from '~/modules/auth/auth.service'
-
 import { checkIsDemoMode } from '~/utils'
-
 import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
 import { TokenService } from '../services/token.service'
 
@@ -44,6 +40,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     private reflector: Reflector,
     private authService: AuthService,
     private tokenService: TokenService,
+    private jwtService: JwtService,
     @InjectRedis() private readonly redis: Redis,
     @Inject(AppConfig.KEY) private appConfig: IAppConfig,
   ) {
@@ -82,6 +79,12 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     let result: any = false
     try {
       result = await super.canActivate(context)
+      // 判断是否为小程序token
+      if (token && request.headers['xi-app-id'] === 'qJoDjHnr8XyEnc6CDfQYth4f3rp2HeRw') {
+        const payload = this.jwtService.verify(token)
+        request.user = payload
+        return true
+      }
     }
     catch (err) {
       // 需要后置判断 这样携带了 token 的用户就能够解析到 request.user

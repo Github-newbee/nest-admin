@@ -14,7 +14,9 @@ import { AppConfig, IAppConfig, ISecurityConfig, SecurityConfig } from '~/config
 
 import { ErrorEnum } from '~/constants/error-code.constant'
 
+import { env } from '~/global/env'
 import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genTokenBlacklistKey } from '~/helper/genRedisKey'
+import { ClinetUserService } from '~/modules/client/user/user.service'
 import { UserService } from '~/modules/user/user.service'
 import { md5 } from '~/utils'
 
@@ -31,6 +33,7 @@ export class AuthService {
     private menuService: MenuService,
     private roleService: RoleService,
     private userService: UserService,
+    private clientUserService: ClinetUserService,
     private loginLogService: LoginLogService,
     private tokenService: TokenService,
     private jwtService: JwtService,
@@ -163,16 +166,21 @@ export class AuthService {
   }
 
   async wxLogin(dto) {
-    const { app_id, code } = dto
-    const APP_SECRET = 'c47e9746d0d1e70a3b9e105c8f9fd0e3'
-    const url = `https://api.weixin.qq.com/sns/jscode2session?appid=${app_id}&secret=${APP_SECRET}&js_code=${code}&grant_type=authorization_code`
+    const { code } = dto
+    const APP_SECRET = env('MINI_APP_SECRET')
+    const APP_ID = env('MINI_APP_ID')
+    const url = `https://api.weixin.qq.com/sns/jscode2session?appid=${APP_ID}&secret=${APP_SECRET}&js_code=${code}&grant_type=authorization_code`
     try {
       const response = await lastValueFrom(
         this.httpService.get(url).pipe(map(response => response.data)),
       )
       const { openid, session_key } = response
+      const { id } = await this.clientUserService.findOneByOpenId(openid)
+      if (!id) {
+        await this.clientUserService.createClientUser({ openid })
+      }
       console.log('🚀 ~ AuthService ~ wxLogin ~ response:', response)
-      return { token: this.jwtService.sign({ openid, session_key }) }
+      return { token: this.jwtService.sign({ openid, session_key }), user_id: id }
     }
     catch (error) {
       console.error('Failed to fetch access token:', error)

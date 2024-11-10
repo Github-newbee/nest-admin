@@ -30,6 +30,10 @@ export class RbacGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<FastifyRequest>()
 
+    // 判断是否为小程序请求
+    if (request.headers['xi-app-id'] === 'qJoDjHnr8XyEnc6CDfQYth4f3rp2HeRw')
+      return true
+
     const { user } = request
     if (!user)
       throw new BusinessException(ErrorEnum.INVALID_LOGIN)
