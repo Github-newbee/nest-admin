@@ -9,11 +9,8 @@ import {
   OneToMany,
   Relation,
 } from 'typeorm'
-
 import { CommonEntity } from '~/common/entity/common.entity'
-
 import { AccessTokenEntity } from '~/modules/auth/entities/access-token.entity'
-
 import { DeptEntity } from '~/modules/system/dept/dept.entity'
 import { RoleEntity } from '~/modules/system/role/role.entity'
 

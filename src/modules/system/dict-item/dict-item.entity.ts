@@ -19,7 +19,7 @@ export class DictItemEntity extends CompleteEntity {
   @ApiProperty({ description: '字典项值' })
   value: string
 
-  @Column({ nullable: true, comment: '字典项排序' })
+  @Column({ name: 'order_no', nullable: true, comment: '字典项排序' })
   orderNo: number
 
   @Column({ type: 'tinyint', default: 1 })

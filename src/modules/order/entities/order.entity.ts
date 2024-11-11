@@ -1,13 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, Relation } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Relation } from 'typeorm'
 import { CommonEntity } from '~/common/entity/common.entity'
 import { ClientUserEntity } from '~/modules/client/user/entities/user.entity'
+import { ImageAIEntity } from '~/modules/system/img-ai/img-ai.entity'
 
 @Entity({ name: 'order' })
 export class OrderEntity extends CommonEntity {
-  @Column({ type: 'decimal', precision: 10, scale: 2, name: 'amount' })
+  @Column({ type: 'int', name: 'amount' })
   amount: number
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, name: 'payed' })
+  @Column({ type: 'int', name: 'payed' })
   payed: number
 
   @Column({ name: 'pay_type', type: 'tinyint', nullable: true, default: 1 })
@@ -26,6 +27,9 @@ export class OrderEntity extends CommonEntity {
   transactionId: string
 
   @ManyToOne(() => ClientUserEntity, user => user.orders)
-  @JoinColumn({ name: 'clinet_user_id' })
-  clinetUser: Relation<ClientUserEntity>
+  @JoinColumn({ name: 'client_user_id' })
+  clientUser: Relation<ClientUserEntity>
+
+  @OneToMany(() => ImageAIEntity, image => image.orders)
+  imageAI: Relation<ImageAIEntity[]>
 }

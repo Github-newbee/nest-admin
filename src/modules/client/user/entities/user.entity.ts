@@ -18,6 +18,6 @@ export class ClientUserEntity extends CommonEntity {
 
   sessionKey: string
 
-  @OneToMany(() => OrderEntity, order => order.clinetUser)
+  @OneToMany(() => OrderEntity, order => order.clientUser)
   orders: Relation<OrderEntity[]>
 }

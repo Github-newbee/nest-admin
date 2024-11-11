@@ -1,6 +1,7 @@
 // import * as fs from 'node:fs'
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { ImageAIModule } from '../system/img-ai/img-ai.module'
 // import { WeChatPayModule } from 'nest-wechatpay-node-v3'
 import { OrderEntity } from './entities/order.entity'
 import { OrderController } from './order.controller'
@@ -11,6 +12,7 @@ const providers = [OrderService]
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderEntity]),
+    ImageAIModule,
     // WeChatPayModule.registerAsync({
     //   useFactory: async () => {
     //     return {

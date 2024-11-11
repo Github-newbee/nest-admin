@@ -1,0 +1,63 @@
+import { MigrationInterface, QueryRunner } from 'typeorm'
+
+export class Generate1731309096432 implements MigrationInterface {
+  name = 'Generate1731309096432'
+
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE \`user_refresh_tokens\` DROP FOREIGN KEY \`FK_1dfd080c2abf42198691b60ae39\``)
+    await queryRunner.query(`ALTER TABLE \`user_access_tokens\` DROP FOREIGN KEY \`FK_e9d9d0c303432e4e5e48c1c3e90\``)
+    await queryRunner.query(`ALTER TABLE \`sys_dept\` DROP FOREIGN KEY \`FK_c75280b01c49779f2323536db67\``)
+    await queryRunner.query(`ALTER TABLE \`sys_user\` DROP FOREIGN KEY \`FK_96bde34263e2ae3b46f011124ac\``)
+    await queryRunner.query(`ALTER TABLE \`todo\` DROP FOREIGN KEY \`FK_9cb7989853c4cb7fe427db4b260\``)
+    await queryRunner.query(`ALTER TABLE \`order\` DROP FOREIGN KEY \`FK_70f6de2aa6c35558e11a8f2a78e\``)
+    await queryRunner.query(`ALTER TABLE \`sys_login_log\` DROP FOREIGN KEY \`FK_3029712e0df6a28edaee46fd470\``)
+    await queryRunner.query(`ALTER TABLE \`sys_task_log\` DROP FOREIGN KEY \`FK_f4d9c36052fdb188ff5c089454b\``)
+    await queryRunner.query(`ALTER TABLE \`sys_role_menus\` DROP FOREIGN KEY \`FK_2b95fdc95b329d66c18f5baed6d\``)
+    await queryRunner.query(`ALTER TABLE \`sys_user_roles\` DROP FOREIGN KEY \`FK_6d61c5b3f76a3419d93a4216695\``)
+    await queryRunner.query(`CREATE TABLE \`sys_img_template\` (\`id\` bigint NOT NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`name\` varchar(50) NOT NULL, \`type\` tinyint NOT NULL DEFAULT '1', \`templateUrl\` varchar(200) NULL COMMENT '模板地图路径', \`status\` tinyint NOT NULL DEFAULT '1', \`remark\` varchar(255) NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`)
+    await queryRunner.query(`CREATE TABLE \`sys_img_bundles\` (\`id\` bigint NOT NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`name\` varchar(50) NOT NULL, \`payed\` decimal(10,2) NOT NULL, \`status\` tinyint NOT NULL DEFAULT '1', \`remark\` varchar(255) NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`)
+    await queryRunner.query(`CREATE TABLE \`sys_bundles_template\` (\`img_bundles_id\` bigint NOT NULL, \`img_template_id\` bigint NOT NULL, INDEX \`IDX_17776b68c87ae20b75550ad7e9\` (\`img_bundles_id\`), INDEX \`IDX_9b7dfb4bd7122c1f86ead22412\` (\`img_template_id\`), PRIMARY KEY (\`img_bundles_id\`, \`img_template_id\`)) ENGINE=InnoDB`)
+    await queryRunner.query(`ALTER TABLE \`user_refresh_tokens\` ADD CONSTRAINT \`FK_1dfd080c2abf42198691b60ae39\` FOREIGN KEY (\`accessTokenId\`) REFERENCES \`user_access_tokens\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`user_access_tokens\` ADD CONSTRAINT \`FK_e9d9d0c303432e4e5e48c1c3e90\` FOREIGN KEY (\`user_id\`) REFERENCES \`sys_user\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`sys_dept\` ADD CONSTRAINT \`FK_c75280b01c49779f2323536db67\` FOREIGN KEY (\`parentId\`) REFERENCES \`sys_dept\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`sys_user\` ADD CONSTRAINT \`FK_96bde34263e2ae3b46f011124ac\` FOREIGN KEY (\`dept_id\`) REFERENCES \`sys_dept\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`todo\` ADD CONSTRAINT \`FK_9cb7989853c4cb7fe427db4b260\` FOREIGN KEY (\`user_id\`) REFERENCES \`sys_user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`order\` ADD CONSTRAINT \`FK_70f6de2aa6c35558e11a8f2a78e\` FOREIGN KEY (\`clinet_user_id\`) REFERENCES \`client_user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`sys_login_log\` ADD CONSTRAINT \`FK_3029712e0df6a28edaee46fd470\` FOREIGN KEY (\`user_id\`) REFERENCES \`sys_user\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`sys_task_log\` ADD CONSTRAINT \`FK_f4d9c36052fdb188ff5c089454b\` FOREIGN KEY (\`task_id\`) REFERENCES \`sys_task\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`sys_role_menus\` ADD CONSTRAINT \`FK_2b95fdc95b329d66c18f5baed6d\` FOREIGN KEY (\`menu_id\`) REFERENCES \`sys_menu\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`sys_user_roles\` ADD CONSTRAINT \`FK_6d61c5b3f76a3419d93a4216695\` FOREIGN KEY (\`role_id\`) REFERENCES \`sys_role\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`)
+    await queryRunner.query(`ALTER TABLE \`sys_bundles_template\` ADD CONSTRAINT \`FK_17776b68c87ae20b75550ad7e9f\` FOREIGN KEY (\`img_bundles_id\`) REFERENCES \`sys_img_bundles\`(\`id\`) ON DELETE CASCADE ON UPDATE CASCADE`)
+    await queryRunner.query(`ALTER TABLE \`sys_bundles_template\` ADD CONSTRAINT \`FK_9b7dfb4bd7122c1f86ead22412e\` FOREIGN KEY (\`img_template_id\`) REFERENCES \`sys_img_template\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`)
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE \`sys_bundles_template\` DROP FOREIGN KEY \`FK_9b7dfb4bd7122c1f86ead22412e\``)
+    await queryRunner.query(`ALTER TABLE \`sys_bundles_template\` DROP FOREIGN KEY \`FK_17776b68c87ae20b75550ad7e9f\``)
+    await queryRunner.query(`ALTER TABLE \`sys_user_roles\` DROP FOREIGN KEY \`FK_6d61c5b3f76a3419d93a4216695\``)
+    await queryRunner.query(`ALTER TABLE \`sys_role_menus\` DROP FOREIGN KEY \`FK_2b95fdc95b329d66c18f5baed6d\``)
+    await queryRunner.query(`ALTER TABLE \`sys_task_log\` DROP FOREIGN KEY \`FK_f4d9c36052fdb188ff5c089454b\``)
+    await queryRunner.query(`ALTER TABLE \`sys_login_log\` DROP FOREIGN KEY \`FK_3029712e0df6a28edaee46fd470\``)
+    await queryRunner.query(`ALTER TABLE \`order\` DROP FOREIGN KEY \`FK_70f6de2aa6c35558e11a8f2a78e\``)
+    await queryRunner.query(`ALTER TABLE \`todo\` DROP FOREIGN KEY \`FK_9cb7989853c4cb7fe427db4b260\``)
+    await queryRunner.query(`ALTER TABLE \`sys_user\` DROP FOREIGN KEY \`FK_96bde34263e2ae3b46f011124ac\``)
+    await queryRunner.query(`ALTER TABLE \`sys_dept\` DROP FOREIGN KEY \`FK_c75280b01c49779f2323536db67\``)
+    await queryRunner.query(`ALTER TABLE \`user_access_tokens\` DROP FOREIGN KEY \`FK_e9d9d0c303432e4e5e48c1c3e90\``)
+    await queryRunner.query(`ALTER TABLE \`user_refresh_tokens\` DROP FOREIGN KEY \`FK_1dfd080c2abf42198691b60ae39\``)
+    await queryRunner.query(`DROP INDEX \`IDX_9b7dfb4bd7122c1f86ead22412\` ON \`sys_bundles_template\``)
+    await queryRunner.query(`DROP INDEX \`IDX_17776b68c87ae20b75550ad7e9\` ON \`sys_bundles_template\``)
+    await queryRunner.query(`DROP TABLE \`sys_bundles_template\``)
+    await queryRunner.query(`DROP TABLE \`sys_img_bundles\``)
+    await queryRunner.query(`DROP TABLE \`sys_img_template\``)
+    await queryRunner.query(`ALTER TABLE \`sys_user_roles\` ADD CONSTRAINT \`FK_6d61c5b3f76a3419d93a4216695\` FOREIGN KEY (\`role_id\`) REFERENCES \`sys_role\`(\`id\`) ON DELETE RESTRICT ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`sys_role_menus\` ADD CONSTRAINT \`FK_2b95fdc95b329d66c18f5baed6d\` FOREIGN KEY (\`menu_id\`) REFERENCES \`sys_menu\`(\`id\`) ON DELETE CASCADE ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`sys_task_log\` ADD CONSTRAINT \`FK_f4d9c36052fdb188ff5c089454b\` FOREIGN KEY (\`task_id\`) REFERENCES \`sys_task\`(\`id\`) ON DELETE RESTRICT ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`sys_login_log\` ADD CONSTRAINT \`FK_3029712e0df6a28edaee46fd470\` FOREIGN KEY (\`user_id\`) REFERENCES \`sys_user\`(\`id\`) ON DELETE CASCADE ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`order\` ADD CONSTRAINT \`FK_70f6de2aa6c35558e11a8f2a78e\` FOREIGN KEY (\`clinet_user_id\`) REFERENCES \`client_user\`(\`id\`) ON DELETE RESTRICT ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`todo\` ADD CONSTRAINT \`FK_9cb7989853c4cb7fe427db4b260\` FOREIGN KEY (\`user_id\`) REFERENCES \`sys_user\`(\`id\`) ON DELETE RESTRICT ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`sys_user\` ADD CONSTRAINT \`FK_96bde34263e2ae3b46f011124ac\` FOREIGN KEY (\`dept_id\`) REFERENCES \`sys_dept\`(\`id\`) ON DELETE RESTRICT ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`sys_dept\` ADD CONSTRAINT \`FK_c75280b01c49779f2323536db67\` FOREIGN KEY (\`parentId\`) REFERENCES \`sys_dept\`(\`id\`) ON DELETE SET NULL ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`user_access_tokens\` ADD CONSTRAINT \`FK_e9d9d0c303432e4e5e48c1c3e90\` FOREIGN KEY (\`user_id\`) REFERENCES \`sys_user\`(\`id\`) ON DELETE CASCADE ON UPDATE RESTRICT`)
+    await queryRunner.query(`ALTER TABLE \`user_refresh_tokens\` ADD CONSTRAINT \`FK_1dfd080c2abf42198691b60ae39\` FOREIGN KEY (\`accessTokenId\`) REFERENCES \`user_access_tokens\`(\`id\`) ON DELETE CASCADE ON UPDATE RESTRICT`)
+  }
+}

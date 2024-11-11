@@ -50,6 +50,7 @@ export class TodoController {
   @ApiResult({ type: TodoEntity })
   @Perm(permissions.READ)
   async info(@IdParam() id: bigint): Promise<TodoEntity> {
+    console.log('🚀 ~ TodoController ~ info ~ id:', typeof id)
     return this.todoService.detail(id)
   }
 

@@ -16,7 +16,7 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 
 import { env } from '~/global/env'
 import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genTokenBlacklistKey } from '~/helper/genRedisKey'
-import { ClinetUserService } from '~/modules/client/user/user.service'
+import { ClientUserService } from '~/modules/client/user/user.service'
 import { UserService } from '~/modules/user/user.service'
 import { md5 } from '~/utils'
 
@@ -33,7 +33,7 @@ export class AuthService {
     private menuService: MenuService,
     private roleService: RoleService,
     private userService: UserService,
-    private clientUserService: ClinetUserService,
+    private clientUserService: ClientUserService,
     private loginLogService: LoginLogService,
     private tokenService: TokenService,
     private jwtService: JwtService,

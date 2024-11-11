@@ -46,7 +46,7 @@ export class OrderService {
   }: OrderQueryDto, openid: string): Promise<Pagination<OrderEntity>> {
     const queryBuilder = this.orderRepository
       .createQueryBuilder('order')
-      .leftJoinAndSelect('order.clinetUser', 'clinetUser')
+      .leftJoinAndSelect('order.clientUser', 'clientUser')
       .where('clientUser.openid = :openid', { openid })
       .where({
         ...(!isNil(status) ? { status } : null),

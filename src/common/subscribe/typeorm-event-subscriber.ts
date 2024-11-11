@@ -8,7 +8,6 @@ export class EverythingSubscriber implements EntitySubscriberInterface {
     if (this.shouldSkip(event.entity)) {
       return
     }
-    console.log('🚀 ~ EverythingSubscriber ~ beforeInsert ~ event:', event)
     if (!event.entity.id) {
       event.entity.id = snowFlake.nextId()
     }

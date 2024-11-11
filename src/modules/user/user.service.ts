@@ -167,13 +167,13 @@ export class UserService {
         password = md5(`${password ?? '123456'}${salt}`)
       }
 
-      const roels = await this.roleRepository.findBy({ id: In(roleIds) })
+      const roles = await this.roleRepository.findBy({ id: In(roleIds) })
       const u = manager.create(UserEntity, {
         username,
         password,
         ...data,
         psalt: salt,
-        roles: roels,
+        roles,
       })
 
       console.log('🚀 ~ UserService ~ awaitthis.entityManager.transaction ~ u:', u)

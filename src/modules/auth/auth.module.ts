@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigKeyPaths, ISecurityConfig } from '~/config'
 import { isDev } from '~/global/env'
-import { ClinetUserModule } from '../client/user/user.module'
+import { ClientUserModule } from '../client/user/user.module'
 import { LogModule } from '../system/log/log.module'
 import { MenuModule } from '../system/menu/menu.module'
 import { RoleModule } from '../system/role/role.module'
@@ -52,7 +52,7 @@ const strategies = [LocalStrategy, JwtStrategy]
       inject: [ConfigService],
     }),
     UserModule,
-    ClinetUserModule,
+    ClientUserModule,
     RoleModule,
     MenuModule,
     LogModule,

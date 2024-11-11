@@ -56,6 +56,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
 
       let andWhere = {}
       const operateId = this.cls.get('operateId')
+      console.log('🚀 ~ UniqueConstraint ~ validate ~ operateId:', operateId)
       // 如果是编辑操作，则排除自身
       if (Number.isInteger(operateId)) {
         andWhere = { id: Not(operateId) }

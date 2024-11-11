@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { RouterModule } from '@nestjs/core'
-import { ClinetUserModule } from './user/user.module'
+import { ClientUserModule } from './user/user.module'
 
 const modules = [
-  ClinetUserModule,
+  ClientUserModule,
 ]
 
 @Module({
