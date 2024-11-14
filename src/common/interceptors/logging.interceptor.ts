@@ -17,6 +17,7 @@ export class LoggingInterceptor implements NestInterceptor {
   ): Observable<any> {
     const call$ = next.handle()
     const request = context.switchToHttp().getRequest()
+    console.log('🚀 ~ LoggingInterceptor ~ request:', request)
     const content = `${request.method} -> ${request.url}`
     const isSse = request.headers.accept === 'text/event-stream'
     this.logger.debug(`+++ 请求：${content}`)

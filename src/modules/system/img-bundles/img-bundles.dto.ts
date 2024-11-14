@@ -1,10 +1,10 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { ArrayMaxSize, IsInt, IsOptional, IsString, MinLength } from 'class-validator'
 import { PagerDto } from '~/common/dto/pager.dto'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 import { ImageBundlesEntity } from './img-bundles.entity'
 
-export class ImageBundlesDto extends PartialType(ImageBundlesEntity) {
+export class ImageBundlesDto {
   @ApiProperty({ description: '字典类型名称' })
   @IsUnique({ entity: ImageBundlesEntity, message: '已存在套餐名称' })
   @IsString()

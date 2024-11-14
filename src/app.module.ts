@@ -20,7 +20,6 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard'
 import { RbacGuard } from './modules/auth/guards/rbac.guard'
 import { ClientModule } from './modules/client/client.module'
 import { HealthModule } from './modules/health/health.module'
-import { MeituModule } from './modules/meitu/meitu.module'
 import { NetdiskModule } from './modules/netdisk/netdisk.module'
 import { OrderModule } from './modules/order/order.module'
 import { SseModule } from './modules/sse/sse.module'
@@ -72,7 +71,6 @@ import { SocketModule } from './socket/socket.module'
 
     // end biz
     TodoModule,
-    MeituModule,
     ClientModule,
     OrderModule,
   ],

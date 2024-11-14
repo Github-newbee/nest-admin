@@ -26,13 +26,6 @@ export class ImageBundlesService {
   }: ImageBundlesDtoQueryDto): Promise<Pagination<ImageBundlesEntity>> {
     const queryBuilder = this.imageBundlesRepository.createQueryBuilder('imageBundles')
       .leftJoinAndSelect('imageBundles.imgTemplates', 'imgTemplates')
-      .select([
-        'imageBundles.id',
-        'imageBundles.name',
-        'imageBundles.price',
-        'imgTemplates.id',
-        'imgTemplates.templateUrl',
-      ])
       .where({
       // ...(name && { name: Like(`%${name}%`) }),
       // ...(code && { code: Like(`%${code}%`) }),
@@ -71,14 +64,29 @@ export class ImageBundlesService {
   /**
    * 更新
    */
-  async update(id: any, dto: Partial<ImageBundlesDto>): Promise<void> {
-    await this.imageBundlesRepository.update(id, dto)
+  async update(id: string, { templateIds, ...data }: Partial<ImageBundlesDto>): Promise<void> {
+    await this.entityManager.transaction(async (manager) => {
+      await manager.update(ImageBundlesEntity, id, data)
+      const bundles = await this.imageBundlesRepository
+        .createQueryBuilder('imageBundles')
+        .leftJoinAndSelect('imageBundles.imgTemplates', 'imgTemplates')
+        .where('imageBundles.id = :id', { id })
+        .getOne()
+      if (templateIds) {
+        await manager.createQueryBuilder()
+          .relation(ImageBundlesEntity, 'imgTemplates')
+          .of(id)
+          .addAndRemove(templateIds, bundles.imgTemplates)
+      }
+    })
+
+    // await this.imageBundlesRepository.update(id, dto)
   }
 
   /**
    * 删除
    */
-  async delete(id: any): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.imageBundlesRepository.delete(id)
   }
 

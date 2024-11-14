@@ -50,7 +50,7 @@ export class ImageTemplateService {
   /**
    * 更新
    */
-  async update(id: any, dto: Partial<ImageTemplateDto>): Promise<void> {
+  async update(id: string, dto: Partial<ImageTemplateDto>): Promise<void> {
     await this.imageTemplateRepository.update(id, dto)
   }
 

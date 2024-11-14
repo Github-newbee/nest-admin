@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Relation } from 'typeorm'
 import { CommonEntity } from '~/common/entity/common.entity'
 import { ClientUserEntity } from '~/modules/client/user/entities/user.entity'
+import { DeviceEntity } from '~/modules/system/device/device.entity'
 import { ImageAIEntity } from '~/modules/system/img-ai/img-ai.entity'
 
 @Entity({ name: 'order' })
@@ -32,4 +33,8 @@ export class OrderEntity extends CommonEntity {
 
   @OneToMany(() => ImageAIEntity, image => image.orders)
   imageAI: Relation<ImageAIEntity[]>
+
+  @ManyToOne(() => DeviceEntity, device => device.order)
+  @JoinColumn({ name: 'device_id' })
+  device: Relation<DeviceEntity>
 }

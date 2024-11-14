@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { Exclude } from 'class-transformer'
 import { Column, Entity, JoinTable, ManyToMany, Relation } from 'typeorm'
 import { CompleteEntity } from '~/common/entity/common.entity'
 import { ImageTemplateEntity } from '../img-template/img-template.entity'
@@ -13,6 +14,7 @@ export class ImageBundlesEntity extends CompleteEntity {
 
   @Column({ type: 'tinyint', default: 1 })
   @ApiProperty({ description: ' 状态' })
+  @Exclude()
   status: number
 
   @Column({ type: 'varchar', nullable: true })
@@ -26,4 +28,9 @@ export class ImageBundlesEntity extends CompleteEntity {
     inverseJoinColumn: { name: 'img_template_id', referencedColumnName: 'id' },
   })
   imgTemplates: Relation<ImageTemplateEntity[]>
+
+  constructor(partial: Partial<ImageBundlesEntity>) {
+    super()
+    Object.assign(this, partial)
+  }
 }

@@ -5,6 +5,7 @@ import { RouterModule } from '@nestjs/core'
 import { UserModule } from '../user/user.module'
 
 import { DeptModule } from './dept/dept.module'
+import { DeviceModule } from './device/device.module'
 import { DictItemModule } from './dict-item/dict-item.module'
 import { DictTypeModule } from './dict-type/dict-type.module'
 import { ImageAIModule } from './img-ai/img-ai.module'
@@ -33,6 +34,7 @@ const modules = [
   ImageTemplateModule,
   ImageBundlesModule,
   ImageAIModule,
+  DeviceModule,
 ]
 
 @Module({
