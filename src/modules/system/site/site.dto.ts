@@ -1,12 +1,9 @@
 import { IsInt, IsOptional, IsString } from 'class-validator'
 import { PagerDto } from '~/common/dto/pager.dto'
 
-export class DeviceDto {
+export class SiteDto {
   @IsString()
   name: string
-
-  @IsString()
-  mac: string
 
   @IsInt()
   @IsOptional()
@@ -15,12 +12,8 @@ export class DeviceDto {
   @IsString()
   @IsOptional()
   remark?: string
-
-  @IsString()
-  @IsOptional()
-  siteId: string
 }
 
-export class DeviceQueryDto extends PagerDto {
+export class SiteQueryDto extends PagerDto {
 
 }

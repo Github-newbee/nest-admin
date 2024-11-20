@@ -18,14 +18,17 @@ export class OrderEntity extends CommonEntity {
   @Column({ default: 1, nullable: true, type: 'tinyint', name: 'pay_status' })
   payStatus: number
 
-  @Column({ default: 1, type: 'tinyint', nullable: true })
+  @Column({ default: 1, type: 'tinyint' })
   status: number
 
-  @Column({ name: 'remark', nullable: true })
+  @Column({ name: 'remark', nullable: true, default: '' })
   remark: string
 
   @Column({ name: 'transaction_id', nullable: true, default: '' })
   transactionId: string
+
+  @Column({ name: 'raw_img' })
+  rawImg: string
 
   @ManyToOne(() => ClientUserEntity, user => user.orders)
   @JoinColumn({ name: 'client_user_id' })

@@ -17,6 +17,7 @@ import { OnlineModule } from './online/online.module'
 import { ParamConfigModule } from './param-config/param-config.module'
 import { RoleModule } from './role/role.module'
 import { ServeModule } from './serve/serve.module'
+import { SiteModule } from './site/site.module'
 import { TaskModule } from './task/task.module'
 
 const modules = [
@@ -35,6 +36,7 @@ const modules = [
   ImageBundlesModule,
   ImageAIModule,
   DeviceModule,
+  SiteModule,
 ]
 
 @Module({

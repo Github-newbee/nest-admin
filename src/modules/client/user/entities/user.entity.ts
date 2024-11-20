@@ -7,16 +7,17 @@ export class ClientUserEntity extends CommonEntity {
   @Column({ unique: true })
   openid: string
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: '' })
   phone: string
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: '' })
   remark: string
 
   @Column({ type: 'tinyint', default: 1 })
   status: number
 
-  sessionKey: string
+  @Column({ type: 'int', default: 0 })
+  balance: number
 
   @OneToMany(() => OrderEntity, order => order.clientUser)
   orders: Relation<OrderEntity[]>

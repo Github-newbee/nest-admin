@@ -20,7 +20,7 @@ export class DeviceController {
   }
 
   @Put(':id')
-  async update(@IdParam() id: string, @Body() dto: DeviceDto): Promise<void> {
+  async update(@IdParam() id: string, @Body() dto: Partial<DeviceDto>): Promise<void> {
     await this.deviceService.update(id, dto)
   }
 }

@@ -10,7 +10,7 @@ import { ImageAIEntity } from './img-ai.entity'
 export class ImageAIService {
   constructor(
     @InjectRepository(ImageAIEntity)
-   @InjectRepository(ImageTemplateEntity)
+    @InjectRepository(ImageTemplateEntity)
     @InjectEntityManager() private entityManager: EntityManager,
   ) {}
 

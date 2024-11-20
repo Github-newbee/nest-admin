@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { EntityManager, Repository } from 'typeorm'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 import { DeviceDto, DeviceQueryDto } from './device.dto'
@@ -11,6 +11,7 @@ export class DeviceService {
   constructor(
     @InjectRepository(DeviceEntity)
     private deviceRepository: Repository<DeviceEntity>,
+    @InjectEntityManager() private entityManager: EntityManager,
   ) {}
 
   /**
@@ -41,9 +42,17 @@ export class DeviceService {
   /**
    * 更新
    */
-  async update(id: string, dto: Partial<DeviceDto>): Promise<void> {
-    // const { typeId, ...rest } = dto
-    await this.deviceRepository.update(id, dto)
+  async update(id: string, { siteId, ...dto }: Partial<DeviceDto>): Promise<void> {
+    await this.entityManager.transaction(async (manager) => {
+      await manager.update(DeviceEntity, id, dto)
+      if (siteId) {
+        await manager
+          .createQueryBuilder()
+          .relation(DeviceEntity, 'site')
+          .of(id)
+          .set(siteId)
+      }
+    })
   }
 
   /**

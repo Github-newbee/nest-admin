@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, ManyToMany, Relation } from 'typeorm'
+import { Column, Entity, ManyToMany, OneToMany, Relation } from 'typeorm'
 
 import { CompleteEntity } from '~/common/entity/common.entity'
+import { ImageAIEntity } from '../img-ai/img-ai.entity'
 import { ImageBundlesEntity } from '../img-bundles/img-bundles.entity'
 
 @Entity({ name: 'sys_img_template' })
@@ -29,4 +30,7 @@ export class ImageTemplateEntity extends CompleteEntity {
 
   @ManyToMany(() => ImageBundlesEntity, user => user.imgTemplates)
   imgBundles: Relation<ImageBundlesEntity[]>
+
+  @OneToMany(() => ImageAIEntity, imageAI => imageAI.imageTemplate)
+  imgAI: Relation<ImageAIEntity[]>
 }
